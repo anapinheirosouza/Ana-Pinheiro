@@ -1,0 +1,238 @@
+Aqui está o código completo para um site moderno e responsivo sobre perfumes, reunindo HTML5, CSS3 e JavaScript em um único arquivo de fácil execução.
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essência & Estilo - Os Melhores Perfumes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a1a, #4a4a4a);
+            color: #fff;
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .filtros {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-filtro {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid #1a1a1a;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-filtro.ativo, .btn-filtro:hover {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .grid-perfumes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img {
+            height: 220px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-categoria {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #888;
+            letter-spacing: 1px;
+        }
+
+        .card-titulo {
+            font-size: 1.3rem;
+            margin: 0.5rem 0;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .card-rodape {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .preco {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .btn-curtir {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-curtir:active {
+            transform: scale(1.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #1a1a1a;
+            color: #fff;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ESSÊNCIA & ESTILO</h1>
+        <p>Descubra as fragrâncias mais marcantes do mundo</p>
+    </header>
+
+    <main class="container">
+        <div class="filtros">
+            <button class="btn-filtro ativo" onclick="filtrar('todos')">Todos</button>
+            <button class="btn-filtro" onclick="filtrar('masculino')">Masculinos</button>
+            <button class="btn-filtro" onclick="filtrar('feminino')">Femininos</button>
+        </div>
+
+        <div class="grid-perfumes" id="gridPerfumes"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Essência & Estilo — Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        const perfumes = [
+            { id: 1, nome: "Sauvage", marca: "Dior", categoria: "masculino", preco: "R$ 650", icone: "🧴", desc: "Notas frescas de bergamota e um toque amadeirado intenso." },
+            { id: 2, nome: "Coco Mademoiselle", marca: "Chanel", categoria: "feminino", preco: "R$ 820", icone: "✨", desc: "Uma fragrância ambarada floral, viva e irresponsavelmente fresca." },
+            { id: 3, nome: "Bleu de Chanel", marca: "Chanel", categoria: "masculino", preco: "R$ 790", icone: "🌊", desc: "Aromático-amadeirado de rastro cativante e elegância pura." },
+            { id: 4, nome: "J'adore", marca: "Dior", categoria: "feminino", preco: "R$ 710", icone: "🌸", desc: "Um buquê floral esculpido nos mínimos detalhes." },
+            { id: 5, nome: "One Million", marca: "Paco Rabanne", categoria: "masculino", preco: "R$ 580", icone: "🏆", desc: "Perfume amadeirado especiado, marcante e sedutor." },
+            { id: 6, nome: "La Vie Est Belle", marca: "Lancôme", categoria: "feminino", preco: "R$ 620", icone: "💎", desc: "Gourmand floral com notas de íris, patchouli e baunilha." }
+        ];
+
+        function renderizarCards(lista) {
+            const grid = document.getElementById("gridPerfumes");
+            grid.innerHTML = "";
+
+            lista.forEach(item => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <div class="card-img">${item.icone}</div>
+                        <div class="card-body">
+                            <span class="card-categoria">${item.marca} • ${item.categoria}</span>
+                            <h3 class="card-titulo">${item.nome}</h3>
+                            <p class="card-desc">${item.desc}</p>
+                            <div class="card-rodape">
+                                <span class="preco">${item.preco}</span>
+                                <button class="btn-curtir" onclick="alternarCurtida(this)">🤍</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filtrar(categoria) {
+            document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('ativo'));
+            event.target.classList.add('ativo');
+
+            if (categoria === 'todos') {
+                renderizarCards(perfumes);
+            } else {
+                const filtrados = perfumes.filter(p => p.categoria === categoria);
+                renderizarCards(filtrados);
+            }
+        }
+
+        function alternarCurtida(botao) {
+            if (botao.innerText === "🤍") {
+                botao.innerText = "❤️";
+            } else {
+                botao.innerText = "🤍";
+            }
+        }
+
+        // Renderiza inicial
+        renderizarCards(perfumes);
+    </script>
+</body>
+</html>
+
+```
+
+**Como testar:**
+
+1. Copie todo o código acima.
+2. Salve em um arquivo chamado `index.html`.
+3. Abra o arquivo no navegador.
